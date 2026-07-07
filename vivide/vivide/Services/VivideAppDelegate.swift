@@ -22,6 +22,16 @@ final class VivideAppDelegate: NSObject, UIApplicationDelegate {
     }
 
     func application(
+        _ app: UIApplication,
+        open url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
+        guard VividePaymentRedirectReturnURL.matches(url) else { return false }
+        VividePaymentCallbackManager.shared.handle(url: url)
+        return true
+    }
+
+    func application(
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {

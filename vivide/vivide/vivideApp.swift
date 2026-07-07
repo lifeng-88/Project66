@@ -25,6 +25,11 @@ struct VivideApp: App {
                         .environment(\.palette, AppTheme.palette(for: settings.resolvedColorScheme(.light)))
                 }
             }
+            .onOpenURL { url in
+                if VividePaymentRedirectReturnURL.matches(url) {
+                    VividePaymentCallbackManager.shared.handle(url: url)
+                }
+            }
             .task {
                 await VivideAFManager.shared.initAFAsync(channelId: VivideAppConfig.resolvedChannel())
                 await bSideManager.bootstrapFromRemote()

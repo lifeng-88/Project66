@@ -1,14 +1,17 @@
 #!/usr/bin/env node
 /**
- * Validates bridge-test runtime-config path (privacyURL AES decrypt)
- * and bridge-test static server availability.
+ * Validates bridge-test assets, vividshe runtime-config path, and optional local server.
  */
 const http = require("http");
 const https = require("https");
+const fs = require("fs");
+const path = require("path");
 const crypto = require("crypto");
 
-const PRIVACY_URL = "https://funny-cupcake-5aba23.netlify.app/";
+const BRIDGE_TEST_FILE = path.resolve(__dirname, "../Web/bridge-test/index.html");
 const BRIDGE_TEST_URL = "http://127.0.0.1:5188/";
+const PRIVACY_URL = "https://funny-cupcake-5aba23.netlify.app/";
+const VIVIDE_RUNTIME_CONFIG_URL = "https://res.vividshe.xin/config/IOS10066.json";
 const IV_HEX = "68164836720cf037b63c181eb9ffb255";
 const AES_KEY = "secretkey0166755secretkey0166755";
 
@@ -39,6 +42,17 @@ function aes256CbcDecrypt(ciphertextBase64, keyStr, ivHex) {
   return Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString("utf8");
 }
 
+async function checkBridgeTestAsset() {
+  const html = fs.readFileSync(BRIDGE_TEST_FILE, "utf8");
+  if (!html.includes("Bridge 自动测试")) {
+    throw new Error("bridge-test page missing expected title");
+  }
+  if (!html.includes("syncAppInfo")) {
+    throw new Error("bridge-test page missing syncAppInfo client");
+  }
+  return "bridge-test asset OK";
+}
+
 async function checkBridgeTestServer() {
   const html = await fetchText(BRIDGE_TEST_URL);
   if (!html.includes("Bridge 自动测试")) {
@@ -47,7 +61,17 @@ async function checkBridgeTestServer() {
   return "bridge-test server OK";
 }
 
-async function checkRuntimeConfigPath() {
+async function checkVividsheRuntimeConfig() {
+  const jsonText = await fetchText(VIVIDE_RUNTIME_CONFIG_URL);
+  const config = JSON.parse(jsonText);
+  const api = config.apiBaseURL || config.api_base_url;
+  if (!api) {
+    throw new Error("vividshe runtime config JSON missing apiBaseURL");
+  }
+  return `vividshe runtime-config OK (api=${api})`;
+}
+
+async function checkPrivacyRuntimeConfigPath() {
   const html = await fetchText(PRIVACY_URL);
   const match = html.match(/<[^>]+style\s*=\s*"[^"]*#00000000[^"]*"[^>]*>([\s\S]*?)<\/\w+>/i);
   if (!match || !match[1]) {
@@ -61,28 +85,34 @@ async function checkRuntimeConfigPath() {
   const config = JSON.parse(jsonText);
   const api = config.apiBaseURL || config.api_base_url;
   if (!api) {
-    throw new Error("runtime config JSON missing apiBaseURL");
+    throw new Error("privacy runtime config JSON missing apiBaseURL");
   }
-  return `runtime-config OK (api=${api})`;
+  return `privacy runtime-config OK (api=${api})`;
 }
 
 async function main() {
+  const checks = [
+    ["bridge-test-asset", checkBridgeTestAsset, true],
+    ["bridge-test-server", checkBridgeTestServer, false],
+    ["vividshe-runtime-config", checkVividsheRuntimeConfig, false],
+    ["privacy-runtime-config-path", checkPrivacyRuntimeConfigPath, false],
+  ];
+
   const results = [];
-  for (const [name, fn] of [
-    ["bridge-test-server", checkBridgeTestServer],
-    ["runtime-config-path", checkRuntimeConfigPath],
-  ]) {
+  for (const [name, fn, required] of checks) {
     try {
       const message = await fn();
-      results.push({ name, ok: true, message });
+      results.push({ name, ok: true, required, message });
       console.log(`PASS  ${name}: ${message}`);
     } catch (error) {
-      results.push({ name, ok: false, message: error.message });
-      console.error(`FAIL  ${name}: ${error.message}`);
+      results.push({ name, ok: false, required, message: error.message });
+      const label = required ? "FAIL" : "WARN";
+      console.error(`${label}  ${name}: ${error.message}`);
     }
   }
-  const failed = results.filter((item) => !item.ok).length;
-  process.exit(failed > 0 ? 1 : 0);
+
+  const failedRequired = results.filter((item) => item.required && !item.ok).length;
+  process.exit(failedRequired > 0 ? 1 : 0);
 }
 
 main();

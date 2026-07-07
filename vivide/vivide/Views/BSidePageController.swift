@@ -24,6 +24,7 @@ final class BSidePageController: UIViewController, WKNavigationDelegate {
         BSideConfig.configureWebViewInspectability(webView)
         BSideConfig.configureNavigationGestures(webView)
         webView.navigationDelegate = bridge
+        webView.uiDelegate = bridge
         webView.backgroundColor = .black
         bridgeHost.attach(webView: webView)
         return webView

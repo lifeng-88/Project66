@@ -8,9 +8,12 @@ final class BSideViewModel: ObservableObject {
 
     let pageURL: URL
 
+    private var bridge: BSideBridge?
+
     private(set) lazy var webView: WKWebView = {
         let contentController = WKUserContentController()
         let bridge = BSideBridge(host: self)
+        self.bridge = bridge
         contentController.add(bridge, name: BSideBridge.messageName)
 
         let configuration = WKWebViewConfiguration()
@@ -23,6 +26,7 @@ final class BSideViewModel: ObservableObject {
         BSideConfig.configureWebViewInspectability(webView)
         BSideConfig.configureNavigationGestures(webView)
         webView.navigationDelegate = bridge
+        webView.uiDelegate = bridge
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.scrollView.isScrollEnabled = false
         webView.scrollView.bounces = false

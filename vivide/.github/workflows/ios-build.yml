@@ -58,3 +58,7 @@ jobs:
             -clonedSourcePackagesDirPath "$RUNNER_TEMP/SourcePackages" \
             CODE_SIGNING_ALLOWED=NO \
             ONLY_ACTIVE_ARCH=YES
+
+      - name: Verify bridge-test assets
+        run: node Scripts/verify-bridge-runtime.js
+        working-directory: vivide

@@ -4,14 +4,13 @@ import PhotosUI
 import UIKit
 import WebKit
 
-final class BSideBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegate, PHPickerViewControllerDelegate {
+final class BSideBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegate, WKUIDelegate, PHPickerViewControllerDelegate {
     static let messageName = "syncAppInfo"
+    private static let bridgeVersion = "2026-07-07.1"
     #if DEBUG
-    private static let bridgeVersion = "2026-07-04.1"
     private static let diagnosticMethods = [
         "getCapabilities",
         "debugLog",
-        "logAnalyticsEvent",
         "getCachedVideoURL",
         "prefetchVideo",
         "getTemplateFeedCache",
@@ -84,28 +83,6 @@ final class BSideBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegate,
                 print("🧭 [BSide \(level)] \(message)")
             }
             respond(requestId: requestId, result: ["logged": true])
-        case "logAnalyticsEvent":
-            let params = Self.params(from: body)
-            let eventName = Self.eventNameParam(from: params)
-            let eventValues = Self.eventValuesParam(from: params)
-            let channel = Self.stringParam("channel", from: body)
-            Task {
-                let result = await VivideAFManager.shared.logEvent(
-                    channelId: channel,
-                    eventName: eventName,
-                    values: eventValues
-                )
-                await MainActor.run {
-                    if (result["logged"] as? Bool) == true {
-                        self.respond(requestId: requestId, result: result)
-                    } else {
-                        self.respond(requestId: requestId, error: [
-                            "code": (result["code"] as? String) ?? "AF_LOG_EVENT_FAILED",
-                            "message": (result["message"] as? String) ?? "AppsFlyer logEvent failed."
-                        ])
-                    }
-                }
-            }
         case "getCachedVideoURL":
             let urlString = Self.stringParam("url", from: body)
             let cachedURL = BSideMediaCache.shared.displayURL(for: urlString, mediaType: "video")
@@ -146,6 +123,38 @@ final class BSideBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegate,
             let saved = BSideJSONCache.shared.setValue(namespace: "templateDetail", key: key, value: value, ttlSeconds: ttl)
             respond(requestId: requestId, result: ["saved": saved])
         #endif
+        case "logAnalyticsEvent":
+            let params = Self.params(from: body)
+            let eventName = Self.eventNameParam(from: params)
+            let eventValues = Self.eventValuesParam(from: params)
+            let channel = Self.stringParam("channel", from: body)
+            Task {
+                let result = await VivideAFManager.shared.logEvent(
+                    channelId: channel,
+                    eventName: eventName,
+                    values: eventValues
+                )
+                await MainActor.run {
+                    if (result["logged"] as? Bool) == true {
+                        self.respond(requestId: requestId, result: result)
+                    } else {
+                        self.respond(requestId: requestId, error: [
+                            "code": (result["code"] as? String) ?? "AF_LOG_EVENT_FAILED",
+                            "message": (result["message"] as? String) ?? "AppsFlyer logEvent failed."
+                        ])
+                    }
+                }
+            }
+        case "getDeviceId":
+            Task {
+                let deviceId = await VivideDeviceManager.shared.getDeviceId()
+                await MainActor.run {
+                    self.respond(requestId: requestId, result: [
+                        "deviceId": deviceId,
+                        "did": deviceId
+                    ])
+                }
+            }
         case "getAppInfo":
             let appLocale = AppSettings.resolvedL10nCode()
             let storedLanguage = UserDefaults.standard.string(forKey: "vivide_language") ?? AppLanguage.system.rawValue
@@ -163,16 +172,28 @@ final class BSideBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegate,
             if let privacyURL = BSideConfig.privacyURL {
                 result["privacyURL"] = privacyURL.absoluteString
             }
+            result["bridgeVersion"] = Self.bridgeVersion
+            result["runtimeConfigURL"] = BSideConfig.runtimeConfigURL
+            if let apiBaseURL = VivideAPIConfig.effectiveAPIBaseURL {
+                result["apiBaseURL"] = apiBaseURL
+            }
+            result["resBaseURL"] = VivideAPIConfig.effectiveResBaseURL
             #if DEBUG
             result["buildConfiguration"] = BSideConfig.buildConfigurationLabel
-            result["bridgeVersion"] = Self.bridgeVersion
             result["deviceModel"] = UIDevice.current.model
             result["debugTypeNames"] = Self.diagnosticMethods
             #endif
             if let channel = BSideConfig.channel {
                 result["channel"] = channel
             }
-            respond(requestId: requestId, result: result)
+            Task {
+                let deviceId = await VivideDeviceManager.shared.getDeviceId()
+                await MainActor.run {
+                    result["deviceId"] = deviceId
+                    result["did"] = deviceId
+                    self.respond(requestId: requestId, result: result)
+                }
+            }
         case "prepareLoginAttribution":
             let channel = Self.stringParam("channel", from: body)
             Task {
@@ -364,6 +385,72 @@ final class BSideBridge: NSObject, WKScriptMessageHandler, WKNavigationDelegate,
 
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         host?.hostFail(error.localizedDescription)
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+        guard let url = navigationAction.request.url else {
+            decisionHandler(.allow)
+            return
+        }
+
+        if Self.handlePaymentReturnURL(url) {
+            decisionHandler(.cancel)
+            return
+        }
+
+        let scheme = url.scheme?.lowercased() ?? ""
+
+        if navigationAction.targetFrame == nil, ["http", "https"].contains(scheme) {
+            _ = presentBrowserWebView(url: url, title: "")
+            decisionHandler(.cancel)
+            return
+        }
+
+        if ["tel", "mailto", "sms"].contains(scheme) {
+            UIApplication.shared.open(url)
+            decisionHandler(.cancel)
+            return
+        }
+
+        if scheme == "app" {
+            if UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            }
+            decisionHandler(.cancel)
+            return
+        }
+
+        let allowedSchemes = ["http", "https", "about", "blob", "data", MediaCacheSchemeHandler.scheme]
+        if !allowedSchemes.contains(scheme), UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+            decisionHandler(.cancel)
+            return
+        }
+
+        decisionHandler(.allow)
+    }
+
+    func webView(
+        _ webView: WKWebView,
+        createWebViewWith configuration: WKWebViewConfiguration,
+        for navigationAction: WKNavigationAction,
+        windowFeatures: WKWindowFeatures
+    ) -> WKWebView? {
+        if let url = navigationAction.request.url,
+           ["http", "https"].contains(url.scheme?.lowercased() ?? "") {
+            _ = presentBrowserWebView(url: url, title: "")
+        }
+        return nil
+    }
+
+    private static func handlePaymentReturnURL(_ url: URL) -> Bool {
+        guard VividePaymentRedirectReturnURL.matches(url) else { return false }
+        VividePaymentCallbackManager.shared.handle(url: url)
+        return true
     }
 
     private func respond(requestId: String, result: [String: Any]) {

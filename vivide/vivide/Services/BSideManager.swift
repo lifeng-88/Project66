@@ -11,7 +11,7 @@ final class BSideManager: ObservableObject {
         case web(URL)
     }
 
-    @Published private(set) var phase: Phase = .native
+    @Published private(set) var phase: Phase = .loading
 
     var canSwitchToBSide: Bool {
         #if DEBUG
@@ -30,6 +30,7 @@ final class BSideManager: ObservableObject {
 
     func bootstrapFromRemote() async {
         if VivideAppConfigPersistence.hasPersistedSuccessfulFetch {
+            await applyPersistedPresentationType(VivideAppConfigPersistence.readPersistedPresentationType())
             Task(priority: .utility) { await self.refreshIfNeeded() }
             return
         }
@@ -88,10 +89,18 @@ final class BSideManager: ObservableObject {
     }
 
     private static func initialPhase() -> Phase {
-        .native
+        guard VivideAppConfigPersistence.hasPersistedSuccessfulFetch else {
+            return VivideAPIConfig.isConfigured ? .loading : .native
+        }
+        let type = VivideAppConfigPersistence.readPersistedPresentationType()
+        if type == 2, BSideConfig.isConfigured {
+            return .loading
+        }
+        return .native
     }
 
     private func performFirstLaunchBootstrap() async {
+        phase = .loading
         await prepareAffiliationOnly()
         let channel = await VivideAppConfig.shared.getChannel()
         let rawAttribution = await VivideAFManager.shared.getAttributionForLogin()
@@ -151,8 +160,19 @@ final class BSideManager: ObservableObject {
     }
 
     private func applyPresentationType(_ type: Int) async {
-        guard type == 1 else { return }
-        phase = .native
+        if type == 2, let url = await resolveBSideURL() {
+            phase = .web(url)
+        } else {
+            phase = .native
+        }
+    }
+
+    private func applyPersistedPresentationType(_ type: Int) async {
+        if type == 2, let url = await resolveBSideURL() {
+            phase = .web(url)
+        } else {
+            phase = .native
+        }
     }
 
     private func applyFirstLaunchFailure(reason: String) {
