@@ -238,6 +238,18 @@ jobs:
             "${AUTH_ARGS[@]}" \
             -quiet
 
+          if [ -z "${CURRENT_PROJECT_VERSION:-}" ]; then
+            echo "::error::CURRENT_PROJECT_VERSION 未设置，无法保证上传唯一 Build Number"
+            exit 1
+          fi
+
+          PLIST="vivide/Info.plist"
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion ${CURRENT_PROJECT_VERSION}" "$PLIST"
+          if [ -n "${MARKETING_VERSION:-}" ]; then
+            /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${MARKETING_VERSION}" "$PLIST"
+          fi
+          echo "Info.plist CFBundleVersion=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$PLIST")"
+
           XCODEBUILD_ARGS=(
             -project "$XCODE_PROJECT"
             -scheme "$SCHEME"
@@ -255,12 +267,21 @@ jobs:
           if [ -n "${CURRENT_PROJECT_VERSION:-}" ]; then
             XCODEBUILD_ARGS+=(CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION")
             echo "Archive CURRENT_PROJECT_VERSION=$CURRENT_PROJECT_VERSION"
-          else
-            echo "::error::CURRENT_PROJECT_VERSION 未设置，无法保证上传唯一 Build Number"
-            exit 1
           fi
 
           xcodebuild archive "${XCODEBUILD_ARGS[@]}"
+
+          ARCHIVE_APP_PLIST="$ARCHIVE_PATH/Products/Applications/${SCHEME}.app/Info.plist"
+          if [ ! -f "$ARCHIVE_APP_PLIST" ]; then
+            echo "::error::找不到归档 Info.plist: $ARCHIVE_APP_PLIST"
+            exit 1
+          fi
+          ARCHIVED_BUILD=$(/usr/libexec/PlistBuddy -c "Print :CFBundleVersion" "$ARCHIVE_APP_PLIST")
+          echo "Archived CFBundleVersion=$ARCHIVED_BUILD"
+          if [ "$ARCHIVED_BUILD" -le 1 ]; then
+            echo "::error::归档 Build Number 仍为 ${ARCHIVED_BUILD}，请检查 Info.plist / CURRENT_PROJECT_VERSION"
+            exit 1
+          fi
 
           echo "ARCHIVE_PATH=$ARCHIVE_PATH" >> "$GITHUB_ENV"
 
