@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Bridge 自动测试</title>
+  <style>
+    :root { color-scheme: dark; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    body { margin: 0; padding: 16px; background: #0d0d11; color: #f2f2f7; }
+    h1 { font-size: 20px; margin: 0 0 8px; }
+    p { color: #9a9aa5; font-size: 13px; margin: 0 0 16px; }
+    .grid { display: grid; gap: 8px; }
+    button {
+      border: 0; border-radius: 12px; padding: 12px 14px; text-align: left;
+      background: #1c1c22; color: #fff; font-size: 14px;
+    }
+    button:active { opacity: 0.8; }
+    #log {
+      margin-top: 16px; padding: 12px; border-radius: 12px; background: #111117;
+      font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap; word-break: break-word; min-height: 120px;
+    }
+    .ok { color: #6ee7a8; }
+    .err { color: #ff8a8a; }
+  </style>
+</head>
+<body>
+  <h1>Bridge 自动测试</h1>
+  <p>在 Vivide iOS WebView 中运行，逐条验证 syncAppInfo Bridge。</p>
+  <div class="grid" id="actions"></div>
+  <div id="log"></div>
+
+  <script>
+    const pending = new Map();
+    let seq = 0;
+
+    window.__syncAppInfoResolve = function (requestId, payload) {
+      const entry = pending.get(requestId);
+      if (!entry) return;
+      pending.delete(requestId);
+      clearTimeout(entry.timer);
+      entry.resolve(payload);
+    };
+
+    function callNative(typeName, params = {}) {
+      return new Promise((resolve, reject) => {
+        const requestId = "req-" + (++seq) + "-" + Date.now();
+        const timer = setTimeout(() => {
+          pending.delete(requestId);
+          reject(new Error("timeout: " + typeName));
+        }, 15000);
+        pending.set(requestId, { resolve, reject, timer });
+        const payload = { requestId, typeName, params };
+        if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.syncAppInfo) {
+          window.webkit.messageHandlers.syncAppInfo.postMessage(payload);
+        } else {
+          clearTimeout(timer);
+          pending.delete(requestId);
+          reject(new Error("syncAppInfo handler missing"));
+        }
+      });
+    }
+
+    const logEl = document.getElementById("log");
+    function log(line, ok) {
+      const span = document.createElement("div");
+      span.className = ok === true ? "ok" : ok === false ? "err" : "";
+      span.textContent = line;
+      logEl.appendChild(span);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    async function run(label, typeName, params) {
+      try {
+        const res = await callNative(typeName, params);
+        const ok = res && res.ok !== false;
+        log((ok ? "PASS " : "FAIL ") + label + ": " + JSON.stringify(res), ok);
+        return ok;
+      } catch (e) {
+        log("FAIL " + label + ": " + e.message, false);
+        return false;
+      }
+    }
+
+    const tests = [
+      ["getAppInfo", "getAppInfo", {}],
+      ["getDeviceId", "getDeviceId", {}],
+      ["showToast", "showToast", { message: "Bridge toast" }],
+      ["getJSONCache", "getJSONCache", { namespace: "bridgeTest", key: "ping" }],
+      ["setJSONCache", "setJSONCache", { namespace: "bridgeTest", key: "ping", value: { t: Date.now() }, ttlSeconds: 60 }],
+      ["getLaunchPushPayload", "getLaunchPushPayload", {}],
+      ["back", "back", {}],
+    ];
+
+    const actions = document.getElementById("actions");
+    tests.forEach(([label, typeName, params]) => {
+      const btn = document.createElement("button");
+      btn.textContent = label;
+      btn.onclick = () => run(label, typeName, params);
+      actions.appendChild(btn);
+    });
+
+    const autoBtn = document.createElement("button");
+    autoBtn.textContent = "运行全部自动测试";
+    autoBtn.onclick = async () => {
+      logEl.textContent = "";
+      let passed = 0;
+      for (const [label, typeName, params] of tests) {
+        if (await run(label, typeName, params)) passed += 1;
+      }
+      log("SUMMARY " + passed + "/" + tests.length + " passed", passed === tests.length);
+    };
+    actions.prepend(autoBtn);
+
+    window.addEventListener("peachgen:native-event", (event) => {
+      log("EVENT " + JSON.stringify(event.detail), null);
+    });
+
+    if (new URLSearchParams(location.search).get("auto") === "1") {
+      setTimeout(() => autoBtn.click(), 300);
+    }
+  </script>
+</body>
+</html>
