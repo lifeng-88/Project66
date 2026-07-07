@@ -95,6 +95,8 @@ jobs:
           INPUT_MARKETING: ${{ github.event.inputs.marketing_version }}
           INPUT_BUILD: ${{ github.event.inputs.build_number }}
           BUNDLE_ID: ${{ env.BUNDLE_ID }}
+          GITHUB_RUN_NUMBER: ${{ github.run_number }}
+          GITHUB_RUN_ATTEMPT: ${{ github.run_attempt }}
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
           APP_STORE_CONNECT_KEY_PATH: ${{ env.APP_STORE_CONNECT_KEY_PATH }}
@@ -120,6 +122,11 @@ jobs:
           echo "marketing_version=${MARKETING:-project-default}" >> "$GITHUB_OUTPUT"
 
           python3 ci/resolve_build_number.py
+
+      - name: Log resolved versions
+        run: |
+          echo "MARKETING_VERSION=${MARKETING_VERSION:-project-default}"
+          echo "CURRENT_PROJECT_VERSION=${CURRENT_PROJECT_VERSION:?CURRENT_PROJECT_VERSION is missing}"
 
       - name: Resolve upload mode
         id: mode
@@ -247,6 +254,10 @@ jobs:
           fi
           if [ -n "${CURRENT_PROJECT_VERSION:-}" ]; then
             XCODEBUILD_ARGS+=(CURRENT_PROJECT_VERSION="$CURRENT_PROJECT_VERSION")
+            echo "Archive CURRENT_PROJECT_VERSION=$CURRENT_PROJECT_VERSION"
+          else
+            echo "::error::CURRENT_PROJECT_VERSION 未设置，无法保证上传唯一 Build Number"
+            exit 1
           fi
 
           xcodebuild archive "${XCODEBUILD_ARGS[@]}"
@@ -277,7 +288,7 @@ jobs:
               'destination': '${DESTINATION}',
               'signingStyle': 'automatic',
               'teamID': '${APPLE_TEAM_ID}',
-              'uploadSymbols': True,
+              'uploadSymbols': False,
               'manageAppVersionAndBuildNumber': False,
           }
           with open('${EXPORT_OPTIONS}', 'wb') as f:
