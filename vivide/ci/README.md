@@ -6,6 +6,9 @@
 推送 tag v* 或手动 Run  →  Archive  →  上传 App Store Connect  →  TestFlight 处理
 ```
 
+Workflow 文件位于**仓库根目录** `.github/workflows/`（`defaults.run.working-directory: vivide`）。
+若仅将 `vivide/` 作为独立 Git 仓库推送，请把 workflow 放到该仓库根目录。
+
 | 工作流 | 文件 | 说明 |
 |--------|------|------|
 | iOS Build | `.github/workflows/ios-build.yml` | 模拟器编译（PR 检查） |
