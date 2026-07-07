@@ -1,0 +1,674 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B10000000000000000000001 /* vivideApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000001 /* vivideApp.swift */; };
+		B10000000000000000000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000002 /* ContentView.swift */; };
+		B10000000000000000000003 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000003 /* AppTheme.swift */; };
+		B10000000000000000000004 /* PhotoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000004 /* PhotoInfo.swift */; };
+		B10000000000000000000005 /* PhotoLibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000005 /* PhotoLibraryViewModel.swift */; };
+		B10000000000000000000006 /* PermissionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000006 /* PermissionView.swift */; };
+		B10000000000000000000007 /* PhotoGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000007 /* PhotoGridView.swift */; };
+		B10000000000000000000008 /* PhotoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000008 /* PhotoDetailView.swift */; };
+		B10000000000000000000009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000009 /* Assets.xcassets */; };
+		B10000000000000000000010 /* DateFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000000B /* DateFilter.swift */; };
+		B10000000000000000000011 /* EXIFReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000000C /* EXIFReader.swift */; };
+		B10000000000000000000012 /* DateFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000000D /* DateFilterBar.swift */; };
+		B10000000000000000000013 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000000E /* LaunchScreen.storyboard */; };
+		B10000000000000000000014 /* LaunchIllustration.png in Resources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000000F /* LaunchIllustration.png */; };
+		B10000000000000000000015 /* PhotoSortOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000010 /* PhotoSortOption.swift */; };
+		B10000000000000000000016 /* PhotoCategoryFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000011 /* PhotoCategoryFilter.swift */; };
+		B10000000000000000000017 /* PhotoInfoExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000012 /* PhotoInfoExporter.swift */; };
+		B10000000000000000000018 /* AlbumStatsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000013 /* AlbumStatsCard.swift */; };
+		B10000000000000000000019 /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000014 /* ShareSheet.swift */; };
+		B1000000000000000000001A /* LocalPhotoRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000015 /* LocalPhotoRecord.swift */; };
+		B1000000000000000000001B /* LocalPhotoStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000016 /* LocalPhotoStorage.swift */; };
+		B1000000000000000000001C /* LocalImportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000017 /* LocalImportService.swift */; };
+		B1000000000000000000001D /* LocalLibraryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000018 /* LocalLibraryViewModel.swift */; };
+		B1000000000000000000001E /* BatchImportBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000019 /* BatchImportBar.swift */; };
+		B1000000000000000000001F /* LocalLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000001A /* LocalLibraryView.swift */; };
+		B10000000000000000000020 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000001B /* AppSettings.swift */; };
+		B10000000000000000000021 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000001C /* L10n.swift */; };
+		B10000000000000000000022 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000001D /* SettingsView.swift */; };
+		B10000000000000000000023 /* ImportFolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000001E /* ImportFolder.swift */; };
+		B10000000000000000000024 /* ImportFolderPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000001F /* ImportFolderPicker.swift */; };
+		B10000000000000000000025 /* FolderManageSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000020 /* FolderManageSheet.swift */; };
+		B10000000000000000000026 /* LegalDocuments.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000021 /* LegalDocuments.swift */; };
+		B10000000000000000000027 /* LegalDocumentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000022 /* LegalDocumentView.swift */; };
+		B10000000000000000000028 /* BSideConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000023 /* BSideConfig.swift */; };
+		B10000000000000000000030 /* BSideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000025 /* BSideView.swift */; };
+		B10000000000000000000031 /* BSideContentLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000026 /* BSideContentLoader.swift */; };
+		B10000000000000000000032 /* BSideJSONCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000027 /* BSideJSONCache.swift */; };
+		B10000000000000000000033 /* BSideMediaCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000028 /* BSideMediaCache.swift */; };
+		B10000000000000000000034 /* MediaCacheSchemeHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000029 /* MediaCacheSchemeHandler.swift */; };
+		B10000000000000000000035 /* BSideBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000002A /* BSideBridge.swift */; };
+		B10000000000000000000036 /* BSidePageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000002B /* BSidePageController.swift */; };
+		B10000000000000000000037 /* BSideViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000002C /* BSideViewModel.swift */; };
+		B10000000000000000000038 /* BSideManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000002D /* BSideManager.swift */; };
+		B10000000000000000000039 /* VivideAppConfigAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000002E /* VivideAppConfigAPI.swift */; };
+		B1000000000000000000003A /* VivideAPIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000002F /* VivideAPIConfig.swift */; };
+		B1000000000000000000003B /* VivideAppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000030 /* VivideAppConfig.swift */; };
+		B1000000000000000000003C /* VivideDeviceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000031 /* VivideDeviceManager.swift */; };
+		B1000000000000000000003D /* VivideAFManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000032 /* VivideAFManager.swift */; };
+		B1000000000000000000003E /* BSideSwitchSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000033 /* BSideSwitchSection.swift */; };
+		B1000000000000000000003F /* VivideAFRemoteConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000034 /* VivideAFRemoteConfig.swift */; };
+		B10000000000000000000040 /* AppsFlyerLib-Static in Frameworks */ = {isa = PBXBuildFile; productRef = C30000000000000000000002 /* AppsFlyerLib-Static */; };
+		B10000000000000000000041 /* VivideKeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000035 /* VivideKeychainManager.swift */; };
+		B10000000000000000000042 /* VivideAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000036 /* VivideAppDelegate.swift */; };
+		B10000000000000000000043 /* VividePushManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000037 /* VividePushManager.swift */; };
+		B10000000000000000000044 /* VividePaymentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000038 /* VividePaymentManager.swift */; };
+		B10000000000000000000045 /* VividePaymentCallbackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000039 /* VividePaymentCallbackManager.swift */; };
+		B10000000000000000000046 /* VividePaymentRedirectReturnURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000003A /* VividePaymentRedirectReturnURL.swift */; };
+		B10000000000000000000047 /* BSidePaymentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000003B /* BSidePaymentController.swift */; };
+		B10000000000000000000048 /* VividePushNotificationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000003C /* VividePushNotificationDelegate.swift */; };
+		B10000000000000000000049 /* TabBarVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000003E /* TabBarVisibility.swift */; };
+		B1000000000000000000004A /* WaterfallGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2000000000000000000003F /* WaterfallGrid.swift */; };
+		B1000000000000000000004B /* BSideBridgeHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000040 /* BSideBridgeHost.swift */; };
+		B1000000000000000000004C /* LocalPhotoThumbnailCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000041 /* LocalPhotoThumbnailCache.swift */; };
+		B1000000000000000000004D /* TopViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000042 /* TopViewController.swift */; };
+		B1000000000000000000004E /* AssetVideoPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B20000000000000000000043 /* AssetVideoPlayerView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A1000000000000000000000F /* vivide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vivide.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B20000000000000000000001 /* vivideApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vivideApp.swift; sourceTree = "<group>"; };
+		B20000000000000000000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		B20000000000000000000003 /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		B20000000000000000000004 /* PhotoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfo.swift; sourceTree = "<group>"; };
+		B20000000000000000000005 /* PhotoLibraryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibraryViewModel.swift; sourceTree = "<group>"; };
+		B20000000000000000000006 /* PermissionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionView.swift; sourceTree = "<group>"; };
+		B20000000000000000000007 /* PhotoGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGridView.swift; sourceTree = "<group>"; };
+		B20000000000000000000008 /* PhotoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailView.swift; sourceTree = "<group>"; };
+		B20000000000000000000009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B2000000000000000000000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B2000000000000000000000B /* DateFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilter.swift; sourceTree = "<group>"; };
+		B2000000000000000000000C /* EXIFReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXIFReader.swift; sourceTree = "<group>"; };
+		B2000000000000000000000D /* DateFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFilterBar.swift; sourceTree = "<group>"; };
+		B2000000000000000000000E /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B2000000000000000000000F /* LaunchIllustration.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LaunchIllustration.png; sourceTree = "<group>"; };
+		B20000000000000000000010 /* PhotoSortOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSortOption.swift; sourceTree = "<group>"; };
+		B20000000000000000000011 /* PhotoCategoryFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCategoryFilter.swift; sourceTree = "<group>"; };
+		B20000000000000000000012 /* PhotoInfoExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoInfoExporter.swift; sourceTree = "<group>"; };
+		B20000000000000000000013 /* AlbumStatsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumStatsCard.swift; sourceTree = "<group>"; };
+		B20000000000000000000014 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
+		B20000000000000000000015 /* LocalPhotoRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPhotoRecord.swift; sourceTree = "<group>"; };
+		B20000000000000000000016 /* LocalPhotoStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPhotoStorage.swift; sourceTree = "<group>"; };
+		B20000000000000000000017 /* LocalImportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImportService.swift; sourceTree = "<group>"; };
+		B20000000000000000000018 /* LocalLibraryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalLibraryViewModel.swift; sourceTree = "<group>"; };
+		B20000000000000000000019 /* BatchImportBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchImportBar.swift; sourceTree = "<group>"; };
+		B2000000000000000000001A /* LocalLibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalLibraryView.swift; sourceTree = "<group>"; };
+		B2000000000000000000001B /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		B2000000000000000000001C /* L10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		B2000000000000000000001D /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		B2000000000000000000001E /* ImportFolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFolder.swift; sourceTree = "<group>"; };
+		B2000000000000000000001F /* ImportFolderPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportFolderPicker.swift; sourceTree = "<group>"; };
+		B20000000000000000000020 /* FolderManageSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderManageSheet.swift; sourceTree = "<group>"; };
+		B20000000000000000000021 /* LegalDocuments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalDocuments.swift; sourceTree = "<group>"; };
+		B20000000000000000000022 /* LegalDocumentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalDocumentView.swift; sourceTree = "<group>"; };
+		B20000000000000000000023 /* BSideConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideConfig.swift; sourceTree = "<group>"; };
+		B20000000000000000000025 /* BSideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideView.swift; sourceTree = "<group>"; };
+		B20000000000000000000026 /* BSideContentLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideContentLoader.swift; sourceTree = "<group>"; };
+		B20000000000000000000027 /* BSideJSONCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideJSONCache.swift; sourceTree = "<group>"; };
+		B20000000000000000000028 /* BSideMediaCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideMediaCache.swift; sourceTree = "<group>"; };
+		B20000000000000000000029 /* MediaCacheSchemeHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaCacheSchemeHandler.swift; sourceTree = "<group>"; };
+		B2000000000000000000002A /* BSideBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideBridge.swift; sourceTree = "<group>"; };
+		B2000000000000000000002B /* BSidePageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSidePageController.swift; sourceTree = "<group>"; };
+		B2000000000000000000002C /* BSideViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideViewModel.swift; sourceTree = "<group>"; };
+		B2000000000000000000002D /* BSideManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideManager.swift; sourceTree = "<group>"; };
+		B2000000000000000000002E /* VivideAppConfigAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VivideAppConfigAPI.swift; sourceTree = "<group>"; };
+		B2000000000000000000002F /* VivideAPIConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VivideAPIConfig.swift; sourceTree = "<group>"; };
+		B20000000000000000000030 /* VivideAppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VivideAppConfig.swift; sourceTree = "<group>"; };
+		B20000000000000000000031 /* VivideDeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VivideDeviceManager.swift; sourceTree = "<group>"; };
+		B20000000000000000000032 /* VivideAFManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VivideAFManager.swift; sourceTree = "<group>"; };
+		B20000000000000000000033 /* BSideSwitchSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideSwitchSection.swift; sourceTree = "<group>"; };
+		B20000000000000000000034 /* VivideAFRemoteConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VivideAFRemoteConfig.swift; sourceTree = "<group>"; };
+		B20000000000000000000035 /* VivideKeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VivideKeychainManager.swift; sourceTree = "<group>"; };
+		B20000000000000000000036 /* VivideAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VivideAppDelegate.swift; sourceTree = "<group>"; };
+		B20000000000000000000037 /* VividePushManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VividePushManager.swift; sourceTree = "<group>"; };
+		B20000000000000000000038 /* VividePaymentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VividePaymentManager.swift; sourceTree = "<group>"; };
+		B20000000000000000000039 /* VividePaymentCallbackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VividePaymentCallbackManager.swift; sourceTree = "<group>"; };
+		B2000000000000000000003A /* VividePaymentRedirectReturnURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VividePaymentRedirectReturnURL.swift; sourceTree = "<group>"; };
+		B2000000000000000000003B /* BSidePaymentController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSidePaymentController.swift; sourceTree = "<group>"; };
+		B2000000000000000000003C /* VividePushNotificationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VividePushNotificationDelegate.swift; sourceTree = "<group>"; };
+		B2000000000000000000003D /* vivide.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = vivide.entitlements; sourceTree = "<group>"; };
+		B2000000000000000000003E /* TabBarVisibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarVisibility.swift; sourceTree = "<group>"; };
+		B2000000000000000000003F /* WaterfallGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaterfallGrid.swift; sourceTree = "<group>"; };
+		B20000000000000000000040 /* BSideBridgeHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BSideBridgeHost.swift; sourceTree = "<group>"; };
+		B20000000000000000000041 /* LocalPhotoThumbnailCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPhotoThumbnailCache.swift; sourceTree = "<group>"; };
+		B20000000000000000000042 /* TopViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopViewController.swift; sourceTree = "<group>"; };
+		B20000000000000000000043 /* AssetVideoPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetVideoPlayerView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A10000000000000000000008 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000040 /* AppsFlyerLib-Static in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A10000000000000000000003 = {
+			isa = PBXGroup;
+			children = (
+				A10000000000000000000005 /* vivide */,
+				A10000000000000000000004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A10000000000000000000004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A1000000000000000000000F /* vivide.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A10000000000000000000005 /* vivide */ = {
+			isa = PBXGroup;
+			children = (
+				B20000000000000000000001 /* vivideApp.swift */,
+				B20000000000000000000002 /* ContentView.swift */,
+				C10000000000000000000001 /* Theme */,
+				C10000000000000000000002 /* Models */,
+				D10000000000000000000001 /* Localization */,
+				C10000000000000000000005 /* Services */,
+				C10000000000000000000003 /* ViewModels */,
+				C10000000000000000000004 /* Views */,
+				C10000000000000000000006 /* Resources */,
+				B20000000000000000000009 /* Assets.xcassets */,
+				B2000000000000000000000E /* LaunchScreen.storyboard */,
+				B2000000000000000000000A /* Info.plist */,
+				B2000000000000000000003D /* vivide.entitlements */,
+			);
+			path = vivide;
+			sourceTree = "<group>";
+		};
+		C10000000000000000000001 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				B20000000000000000000003 /* AppTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		C10000000000000000000002 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B20000000000000000000004 /* PhotoInfo.swift */,
+				B2000000000000000000000B /* DateFilter.swift */,
+				B20000000000000000000010 /* PhotoSortOption.swift */,
+				B20000000000000000000011 /* PhotoCategoryFilter.swift */,
+				B20000000000000000000015 /* LocalPhotoRecord.swift */,
+				B2000000000000000000001E /* ImportFolder.swift */,
+				B20000000000000000000021 /* LegalDocuments.swift */,
+				B20000000000000000000023 /* BSideConfig.swift */,
+				B2000000000000000000001B /* AppSettings.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		C10000000000000000000005 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B2000000000000000000000C /* EXIFReader.swift */,
+				B20000000000000000000012 /* PhotoInfoExporter.swift */,
+				B20000000000000000000016 /* LocalPhotoStorage.swift */,
+				B20000000000000000000017 /* LocalImportService.swift */,
+				B20000000000000000000026 /* BSideContentLoader.swift */,
+				B20000000000000000000027 /* BSideJSONCache.swift */,
+				B20000000000000000000028 /* BSideMediaCache.swift */,
+				B20000000000000000000029 /* MediaCacheSchemeHandler.swift */,
+				B2000000000000000000002A /* BSideBridge.swift */,
+				B2000000000000000000002D /* BSideManager.swift */,
+				B2000000000000000000002E /* VivideAppConfigAPI.swift */,
+				B2000000000000000000002F /* VivideAPIConfig.swift */,
+				B20000000000000000000030 /* VivideAppConfig.swift */,
+				B20000000000000000000031 /* VivideDeviceManager.swift */,
+				B20000000000000000000032 /* VivideAFManager.swift */,
+				B20000000000000000000034 /* VivideAFRemoteConfig.swift */,
+				B20000000000000000000035 /* VivideKeychainManager.swift */,
+				B20000000000000000000036 /* VivideAppDelegate.swift */,
+				B20000000000000000000037 /* VividePushManager.swift */,
+				B20000000000000000000040 /* BSideBridgeHost.swift */,
+				B20000000000000000000041 /* LocalPhotoThumbnailCache.swift */,
+				B20000000000000000000042 /* TopViewController.swift */,
+				B20000000000000000000038 /* VividePaymentManager.swift */,
+				B20000000000000000000039 /* VividePaymentCallbackManager.swift */,
+				B2000000000000000000003A /* VividePaymentRedirectReturnURL.swift */,
+				B2000000000000000000003C /* VividePushNotificationDelegate.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		C10000000000000000000003 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B20000000000000000000005 /* PhotoLibraryViewModel.swift */,
+				B20000000000000000000018 /* LocalLibraryViewModel.swift */,
+				B2000000000000000000002C /* BSideViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		C10000000000000000000004 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				B20000000000000000000006 /* PermissionView.swift */,
+				B20000000000000000000007 /* PhotoGridView.swift */,
+				B20000000000000000000008 /* PhotoDetailView.swift */,
+				B2000000000000000000000D /* DateFilterBar.swift */,
+				B20000000000000000000013 /* AlbumStatsCard.swift */,
+				B20000000000000000000014 /* ShareSheet.swift */,
+				B20000000000000000000019 /* BatchImportBar.swift */,
+				B2000000000000000000001A /* LocalLibraryView.swift */,
+				B2000000000000000000001D /* SettingsView.swift */,
+				B2000000000000000000001F /* ImportFolderPicker.swift */,
+				B20000000000000000000020 /* FolderManageSheet.swift */,
+				B20000000000000000000022 /* LegalDocumentView.swift */,
+				B20000000000000000000025 /* BSideView.swift */,
+				B2000000000000000000002B /* BSidePageController.swift */,
+				B20000000000000000000033 /* BSideSwitchSection.swift */,
+				B2000000000000000000003B /* BSidePaymentController.swift */,
+				B2000000000000000000003E /* TabBarVisibility.swift */,
+				B2000000000000000000003F /* WaterfallGrid.swift */,
+				B20000000000000000000043 /* AssetVideoPlayerView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C10000000000000000000006 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B2000000000000000000000F /* LaunchIllustration.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D10000000000000000000001 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				B2000000000000000000001C /* L10n.swift */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A10000000000000000000002 /* vivide */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A1000000000000000000000A /* Build configuration list for PBXNativeTarget "vivide" */;
+			buildPhases = (
+				A10000000000000000000006 /* Sources */,
+				A10000000000000000000008 /* Frameworks */,
+				A10000000000000000000007 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = vivide;
+			packageProductDependencies = (
+				C30000000000000000000002 /* AppsFlyerLib-Static */,
+			);
+			productName = vivide;
+			productReference = A1000000000000000000000F /* vivide.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A10000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A10000000000000000000002 = {
+						CreatedOnToolsVersion = 15.0;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = A10000000000000000000009 /* Build configuration list for PBXProject "vivide" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = "zh-Hans";
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+			);
+			mainGroup = A10000000000000000000003;
+			packageReferences = (
+				C30000000000000000000001 /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Static" */,
+			);
+			productRefGroup = A10000000000000000000004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A10000000000000000000002 /* vivide */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A10000000000000000000007 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000009 /* Assets.xcassets in Resources */,
+				B10000000000000000000013 /* LaunchScreen.storyboard in Resources */,
+				B10000000000000000000014 /* LaunchIllustration.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A10000000000000000000006 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000001 /* vivideApp.swift in Sources */,
+				B10000000000000000000002 /* ContentView.swift in Sources */,
+				B10000000000000000000003 /* AppTheme.swift in Sources */,
+				B10000000000000000000004 /* PhotoInfo.swift in Sources */,
+				B10000000000000000000005 /* PhotoLibraryViewModel.swift in Sources */,
+				B10000000000000000000006 /* PermissionView.swift in Sources */,
+				B10000000000000000000007 /* PhotoGridView.swift in Sources */,
+				B10000000000000000000008 /* PhotoDetailView.swift in Sources */,
+				B10000000000000000000010 /* DateFilter.swift in Sources */,
+				B10000000000000000000011 /* EXIFReader.swift in Sources */,
+				B10000000000000000000012 /* DateFilterBar.swift in Sources */,
+				B10000000000000000000015 /* PhotoSortOption.swift in Sources */,
+				B10000000000000000000016 /* PhotoCategoryFilter.swift in Sources */,
+				B10000000000000000000017 /* PhotoInfoExporter.swift in Sources */,
+				B10000000000000000000018 /* AlbumStatsCard.swift in Sources */,
+				B10000000000000000000019 /* ShareSheet.swift in Sources */,
+				B1000000000000000000001A /* LocalPhotoRecord.swift in Sources */,
+				B1000000000000000000001B /* LocalPhotoStorage.swift in Sources */,
+				B1000000000000000000001C /* LocalImportService.swift in Sources */,
+				B1000000000000000000001D /* LocalLibraryViewModel.swift in Sources */,
+				B1000000000000000000001E /* BatchImportBar.swift in Sources */,
+				B1000000000000000000001F /* LocalLibraryView.swift in Sources */,
+				B10000000000000000000020 /* AppSettings.swift in Sources */,
+				B10000000000000000000021 /* L10n.swift in Sources */,
+				B10000000000000000000022 /* SettingsView.swift in Sources */,
+				B10000000000000000000023 /* ImportFolder.swift in Sources */,
+				B10000000000000000000024 /* ImportFolderPicker.swift in Sources */,
+				B10000000000000000000025 /* FolderManageSheet.swift in Sources */,
+				B10000000000000000000026 /* LegalDocuments.swift in Sources */,
+				B10000000000000000000027 /* LegalDocumentView.swift in Sources */,
+				B10000000000000000000028 /* BSideConfig.swift in Sources */,
+				B10000000000000000000030 /* BSideView.swift in Sources */,
+				B10000000000000000000031 /* BSideContentLoader.swift in Sources */,
+				B10000000000000000000032 /* BSideJSONCache.swift in Sources */,
+				B10000000000000000000033 /* BSideMediaCache.swift in Sources */,
+				B10000000000000000000034 /* MediaCacheSchemeHandler.swift in Sources */,
+				B10000000000000000000035 /* BSideBridge.swift in Sources */,
+				B10000000000000000000036 /* BSidePageController.swift in Sources */,
+				B10000000000000000000037 /* BSideViewModel.swift in Sources */,
+				B10000000000000000000038 /* BSideManager.swift in Sources */,
+				B10000000000000000000039 /* VivideAppConfigAPI.swift in Sources */,
+				B1000000000000000000003A /* VivideAPIConfig.swift in Sources */,
+				B1000000000000000000003B /* VivideAppConfig.swift in Sources */,
+				B1000000000000000000003C /* VivideDeviceManager.swift in Sources */,
+				B1000000000000000000003D /* VivideAFManager.swift in Sources */,
+				B1000000000000000000003E /* BSideSwitchSection.swift in Sources */,
+				B1000000000000000000003F /* VivideAFRemoteConfig.swift in Sources */,
+				B10000000000000000000041 /* VivideKeychainManager.swift in Sources */,
+				B10000000000000000000042 /* VivideAppDelegate.swift in Sources */,
+				B10000000000000000000043 /* VividePushManager.swift in Sources */,
+				B10000000000000000000044 /* VividePaymentManager.swift in Sources */,
+				B10000000000000000000045 /* VividePaymentCallbackManager.swift in Sources */,
+				B10000000000000000000046 /* VividePaymentRedirectReturnURL.swift in Sources */,
+				B10000000000000000000047 /* BSidePaymentController.swift in Sources */,
+				B10000000000000000000048 /* VividePushNotificationDelegate.swift in Sources */,
+				B10000000000000000000049 /* TabBarVisibility.swift in Sources */,
+				B1000000000000000000004A /* WaterfallGrid.swift in Sources */,
+				B1000000000000000000004B /* BSideBridgeHost.swift in Sources */,
+				B1000000000000000000004C /* LocalPhotoThumbnailCache.swift in Sources */,
+				B1000000000000000000004D /* TopViewController.swift in Sources */,
+				B1000000000000000000004E /* AssetVideoPlayerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A1000000000000000000000B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A1000000000000000000000C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A1000000000000000000000D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = vivide/vivide.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = vivide/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindspark.net;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A1000000000000000000000E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = vivide/vivide.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = vivide/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mindspark.net;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A10000000000000000000009 /* Build configuration list for PBXProject "vivide" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000000000000000000B /* Debug */,
+				A1000000000000000000000C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A1000000000000000000000A /* Build configuration list for PBXNativeTarget "vivide" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A1000000000000000000000D /* Debug */,
+				A1000000000000000000000E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C30000000000000000000001 /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Static" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppsFlyerSDK/AppsFlyerFramework-Static";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.15.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C30000000000000000000002 /* AppsFlyerLib-Static */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C30000000000000000000001 /* XCRemoteSwiftPackageReference "AppsFlyerFramework-Static" */;
+			productName = "AppsFlyerLib-Static";
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A10000000000000000000001 /* Project object */;
+}
