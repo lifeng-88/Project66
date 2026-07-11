@@ -85,7 +85,7 @@ final class BSideManager: ObservableObject {
 
     func switchToNative() {
         phase = .native
-        VivideAppConfigPersistence.persistSuccessfulPresentationType(1)
+        VivideAppConfigPersistence.persistSuccessfulPresentationType(1, force: true)
     }
 
     private static func initialPhase() -> Phase {
@@ -147,13 +147,19 @@ final class BSideManager: ObservableObject {
         switch result {
         case .success(let response):
             if let type = response.type, type == 1 || type == 2 {
+                // type=2 持久化后粘性保留：刷新若返回 1，仍按本地 2 进 B 面
+                let effectiveType = VivideAppConfigPersistence.hasPersistedBSide ? 2 : type
                 VivideAppConfigPersistence.persistSuccessfulPresentationType(type)
-                await applyPresentationType(type)
+                await applyPresentationType(effectiveType)
+            } else if VivideAppConfigPersistence.hasPersistedBSide {
+                await applyPresentationType(2)
             } else if !VivideAppConfigPersistence.hasPersistedSuccessfulFetch {
                 applyFirstLaunchFailure(reason: "invalid_type")
             }
         case .failure(let error):
-            if !VivideAppConfigPersistence.hasPersistedSuccessfulFetch {
+            if VivideAppConfigPersistence.hasPersistedBSide {
+                await applyPresentationType(2)
+            } else if !VivideAppConfigPersistence.hasPersistedSuccessfulFetch {
                 applyFirstLaunchFailure(reason: error.localizedDescription)
             }
         }

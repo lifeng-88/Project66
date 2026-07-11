@@ -11,7 +11,7 @@ actor VivideKeychainManager {
     private let service: String
 
     private init() {
-        service = Bundle.main.bundleIdentifier ?? "com.mindspark.net"
+        service = Bundle.main.bundleIdentifier ?? "com.vivide.app"
     }
 
     func save(key: String, value: String) throws {

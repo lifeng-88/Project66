@@ -188,7 +188,7 @@ def main() -> None:
         write_outputs(int(explicit))
         return
 
-    bundle_id = os.environ.get("BUNDLE_ID", "com.mindspark.net").strip()
+    bundle_id = os.environ.get("BUNDLE_ID", "com.vivide.app").strip()
     project_build = project_build_number()
     ci_floor = ci_build_floor()
 

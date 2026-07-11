@@ -126,7 +126,7 @@ def main() -> None:
     key_id = require_env("APP_STORE_CONNECT_KEY_ID")
     issuer_id = require_env("APP_STORE_CONNECT_ISSUER_ID")
     key_path = Path(require_env("APP_STORE_CONNECT_KEY_PATH"))
-    bundle_id = os.environ.get("BUNDLE_ID", "com.mindspark.net").strip()
+    bundle_id = os.environ.get("BUNDLE_ID", "com.vivide.app").strip()
 
     if not key_path.exists():
         print(f"::error::找不到 API Key 文件：{key_path}")

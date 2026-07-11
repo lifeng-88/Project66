@@ -63,8 +63,15 @@ enum VivideAppConfigPersistence {
         return raw == 1 || raw == 2 ? raw : defaultValue
     }
 
-    static func persistSuccessfulPresentationType(_ value: Int) {
+    /// 是否已持久化为 B 面（type=2）。一旦为 true，后续 type=1 不应覆盖。
+    static var hasPersistedBSide: Bool {
+        hasPersistedSuccessfulFetch && readPersistedPresentationType() == 2
+    }
+
+    static func persistSuccessfulPresentationType(_ value: Int, force: Bool = false) {
         guard value == 1 || value == 2 else { return }
+        // type=2 粘性：已进过 B 面后，不允许被远程 type=1 降级覆盖（手动切换可 force）
+        if value == 1, !force, hasPersistedBSide { return }
         let defaults = UserDefaults.standard
         defaults.set(value, forKey: presentationTypeKey)
         defaults.set(true, forKey: fetchSucceededKey)

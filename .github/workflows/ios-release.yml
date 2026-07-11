@@ -39,7 +39,7 @@ defaults:
 env:
   XCODE_PROJECT: vivide.xcodeproj
   SCHEME: vivide
-  BUNDLE_ID: com.mindspark.net
+  BUNDLE_ID: com.vivide.app
   MIN_MARKETING_VERSION: "1.0"
 
 jobs:

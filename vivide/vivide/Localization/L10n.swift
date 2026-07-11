@@ -6,7 +6,7 @@ enum L10nKey: String {
     case settingsTitle, settingsLanguage, settingsAppearance, settingsAbout
     case settingsLegal, userAgreement, privacyPolicy
     case settingsLocalLibrary, settingsShowHiddenPhotos, settingsShowHiddenPhotosHint
-    case settingsVersion, settingsDescription
+    case settingsVersion, settingsDescription, settingsDevIdCopied
     case settingsBSideTitle, settingsBSideHint, settingsBSideOpen, bsideClose
     case languageSystem, languageZhHans, languageEnglish
     case appearanceSystem, appearanceLight, appearanceDark
@@ -78,6 +78,7 @@ enum L10n {
         .settingsLocalLibrary: "本地库", .settingsShowHiddenPhotos: "显示隐藏图片",
         .settingsShowHiddenPhotosHint: "开启后，本地库默认列表中会显示已隐藏的图片",
         .settingsAbout: "关于", .settingsVersion: "版本", .settingsDescription: "柔美风格的相册信息查看工具",
+        .settingsDevIdCopied: "dev_id 已复制到剪贴板",
         .settingsBSideTitle: "探索", .settingsBSideHint: "在应用内打开网页版体验。",
         .settingsBSideOpen: "打开网页版", .bsideClose: "返回应用",
         .settingsLegal: "法律信息", .userAgreement: "用户协议", .privacyPolicy: "隐私政策",
@@ -171,6 +172,7 @@ enum L10n {
         .settingsShowHiddenPhotosHint: "When enabled, hidden photos appear in the default local library list",
         .settingsAbout: "About", .settingsVersion: "Version",
         .settingsDescription: "A graceful photo info explorer",
+        .settingsDevIdCopied: "dev_id copied to clipboard",
         .settingsBSideTitle: "Discover", .settingsBSideHint: "Open the web experience in the app.",
         .settingsBSideOpen: "Open Web Version", .bsideClose: "Back to App",
         .settingsLegal: "Legal", .userAgreement: "User Agreement", .privacyPolicy: "Privacy Policy",

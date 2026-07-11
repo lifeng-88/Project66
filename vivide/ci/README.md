@@ -20,9 +20,9 @@ Workflow 文件位于**仓库根目录** `.github/workflows/`（`defaults.run.wo
 
 ## 一、Apple 后台准备
 
-1. [Developer](https://developer.apple.com/account/) 注册 App ID：`com.mindspark.net`
+1. [Developer](https://developer.apple.com/account/) 注册 App ID：`com.vivide.app`
 2. 勾选所需 Capability（推送等）
-3. [App Store Connect](https://appstoreconnect.apple.com/) 创建 App，Bundle ID 选 `com.mindspark.net`（Apple ID：`6758699122`）
+3. [App Store Connect](https://appstoreconnect.apple.com/) 创建 App，Bundle ID 选 `com.vivide.app`（Apple ID：`6758699122`）
 4. 创建 **App Store Connect API Key**（角色 **Admin** 或 **App Manager**），下载 `.p8`（仅一次）
 
 ---
@@ -86,10 +86,10 @@ Workflow 只负责上传构建。还需在 App Store Connect：
 | 现象 | 处理 |
 |------|------|
 | `no devices` / Development provisioning profile | 确认 App ID 已注册；API Key 角色为 **Admin** 或 **App Manager**；CI 会自动注册占位设备 |
-| `No profiles for 'com.mindspark.net'` | 同上；确认 `APPLE_TEAM_ID` 正确；重新 Run workflow |
+| `No profiles for 'com.vivide.app'` | 同上；确认 `APPLE_TEAM_ID` 正确；重新 Run workflow |
 | Build Number 重复 | 重新 Run workflow（CI 会自动取 Connect 最新值 +1）；或手动填更大的 `build_number` |
 | 上传成功但无构建 | 等待处理；查邮件 / Resolution Center |
-| Bundle ID 不匹配 | 工程须为 `com.mindspark.net` |
+| Bundle ID 不匹配 | 工程须为 `com.vivide.app` |
 | API Key 认证失败 | 检查 `.p8` Secret 是否含完整 `BEGIN/END PRIVATE KEY` 行 |
 
 ---
