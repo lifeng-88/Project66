@@ -5,6 +5,7 @@ struct VivideAppConfigRequest {
     let source: String?
     let channel: String?
     let version: String
+    let afId: String?
     let afAttributionJson: String?
 
     func toRequestParameters() -> [String: Any] {
@@ -12,8 +13,9 @@ struct VivideAppConfigRequest {
             "dev_id": devId,
             "version": version
         ]
-        if let source { params["source"] = source }
-        if let channel { params["channel"] = channel }
+        if let source, !source.isEmpty { params["source"] = source }
+        if let channel, !channel.isEmpty { params["channel"] = channel }
+        if let afId, !afId.isEmpty { params["af_id"] = afId }
         if let afAttributionJson, !afAttributionJson.isEmpty {
             params["af_attribution_json"] = afAttributionJson
         }

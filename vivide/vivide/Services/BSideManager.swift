@@ -23,9 +23,26 @@ final class BSideManager: ObservableObject {
 
     private var bootstrapInFlight: Task<Void, Never>?
     private var remoteRefreshInFlight: Task<Void, Never>?
+    private var attributionUpdateObserver: NSObjectProtocol?
 
     private init() {
         phase = Self.initialPhase()
+        attributionUpdateObserver = NotificationCenter.default.addObserver(
+            forName: .vivideAFAttributionDidUpdate,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                // 首启因超时已用占位 JSON 打过 app_config 时，迟到归因强制补传
+                await self?.refreshIfNeeded(force: true)
+            }
+        }
+    }
+
+    deinit {
+        if let attributionUpdateObserver {
+            NotificationCenter.default.removeObserver(attributionUpdateObserver)
+        }
     }
 
     func bootstrapFromRemote() async {
@@ -101,16 +118,17 @@ final class BSideManager: ObservableObject {
 
     private func performFirstLaunchBootstrap() async {
         phase = .loading
-        await prepareAffiliationOnly()
+        let attribution = await prepareAffiliationOnly()
         let channel = await VivideAppConfig.shared.getChannel()
-        let rawAttribution = await VivideAFManager.shared.getAttributionForLogin()
-        await applyAppConfigResponse(await requestAppConfig(channel: channel, attribution: rawAttribution))
+        await applyAppConfigResponse(await requestAppConfig(channel: channel, attribution: attribution))
     }
 
-    private func prepareAffiliationOnly() async {
+    @discardableResult
+    private func prepareAffiliationOnly() async -> AFAttributionResult? {
         let channel = await VivideAppConfig.shared.getChannel()
         await VivideAFManager.shared.initAFAsync(channelId: channel)
-        _ = await VivideAFManager.shared.prepareForFirstLaunch(channelId: channel)
+        let (_, attribution) = await VivideAFManager.shared.prepareForFirstLaunch(channelId: channel)
+        return attribution
     }
 
     private func fetchAppConfigFromNetwork() async {
@@ -138,6 +156,7 @@ final class BSideManager: ObservableObject {
             source: attribution.source,
             channel: channel,
             version: version,
+            afId: attribution.afId,
             afAttributionJson: attribution.attributionJson
         )
         return await VivideAppConfigService.fetchAppConfig(request: request)

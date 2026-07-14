@@ -4,6 +4,11 @@ import Foundation
 import AppsFlyerLib
 #endif
 
+extension Notification.Name {
+    /// AF 归因数据首次就绪或从超时占位升级为真实数据时发出。
+    static let vivideAFAttributionDidUpdate = Notification.Name("vivideAFAttributionDidUpdate")
+}
+
 private let nativeAFHasObtainedAttributionKey = "vivide.af_has_obtained_attribution"
 private let nativeAFHasCompletedLoginKey = "vivide.af_has_completed_login"
 private let nativeAFAttributionJSONKey = "vivide.af_attribution_json"
@@ -19,9 +24,17 @@ struct AFAttributionResult {
     var attributionJson: String?
 
     static func timeoutFallback() -> AFAttributionResult {
-        let timeoutJson = (try? JSONSerialization.data(withJSONObject: ["timeout": true]))
-            .flatMap { String(data: $0, encoding: .utf8) }
+        let timeoutJson = Self.jsonString(from: [
+            "timeout": true,
+            "af_status": "timeout"
+        ])
         return AFAttributionResult(afId: nil, adId: nil, source: nil, attributionJson: timeoutJson)
+    }
+
+    var hasRealAttributionPayload: Bool {
+        guard let json = attributionJson?.trimmedNonEmpty else { return false }
+        if json.contains("\"timeout\":true") || json.contains("\"timeout\": true") { return false }
+        return true
     }
 
     var loginParameters: [String: Any] {
@@ -33,6 +46,65 @@ struct AFAttributionResult {
             params["afAttributionJson"] = attributionJson
         }
         return params
+    }
+
+    static func jsonString(from object: [String: Any]) -> String? {
+        guard JSONSerialization.isValidJSONObject(object),
+              let data = try? JSONSerialization.data(withJSONObject: object, options: []),
+              let string = String(data: data, encoding: .utf8) else {
+            return nil
+        }
+        return string
+    }
+
+    static func jsonString(fromConversionInfo conversionInfo: [AnyHashable: Any]) -> String? {
+        let sanitized = sanitizeDictionary(conversionInfo)
+        guard JSONSerialization.isValidJSONObject(sanitized),
+              let data = try? JSONSerialization.data(withJSONObject: sanitized, options: []),
+              let string = String(data: data, encoding: .utf8) else {
+            return nil
+        }
+        return string
+    }
+
+    private static func sanitizeDictionary(_ raw: [AnyHashable: Any]) -> [String: Any] {
+        var result: [String: Any] = [:]
+        for (key, value) in raw {
+            guard let sanitized = sanitizeValue(value) else { continue }
+            result["\(key)"] = sanitized
+        }
+        return result
+    }
+
+    private static func sanitizeValue(_ value: Any) -> Any? {
+        switch value {
+        case is NSNull:
+            return NSNull()
+        case let string as String:
+            return string
+        case let number as NSNumber:
+            return number
+        case let bool as Bool:
+            return bool
+        case let int as Int:
+            return int
+        case let double as Double:
+            return double
+        case let dict as [String: Any]:
+            var nested: [String: Any] = [:]
+            for (key, nestedValue) in dict {
+                if let sanitized = sanitizeValue(nestedValue) {
+                    nested[key] = sanitized
+                }
+            }
+            return nested
+        case let dict as [AnyHashable: Any]:
+            return sanitizeDictionary(dict)
+        case let array as [Any]:
+            return array.compactMap { sanitizeValue($0) }
+        default:
+            return "\(value)"
+        }
     }
 }
 
@@ -73,14 +145,14 @@ final class VivideAFManager {
         let effectiveChannel = effectiveChannel(channelId: channelId)
         #if DEBUG
         if ProcessInfo.processInfo.environment["SIMULATE_AF_TIMEOUT"] == "1" {
-            return (true, nil)
+            return (true, AFAttributionResult.timeoutFallback())
         }
         #endif
         guard await configureAndStart(channelId: effectiveChannel) else {
-            return (true, nil)
+            return (true, AFAttributionResult.timeoutFallback())
         }
         let attribution = await waitForAttributionOrTimeout()
-        return (true, attribution)
+        return (true, attribution ?? AFAttributionResult.timeoutFallback())
     }
 
     func prepareLoginAttribution(channelId: String?) async -> [String: Any] {
@@ -142,6 +214,10 @@ final class VivideAFManager {
     }
 
     func setAttribution(afId: String?, adId: String?, source: String?, attributionJson: String?) {
+        let previousHadRealPayload = attributionResult?.hasRealAttributionPayload
+            ?? getAttributionForLoginCached()?.hasRealAttributionPayload
+            ?? false
+
         let result = AFAttributionResult(
             afId: afId,
             adId: adId,
@@ -155,10 +231,23 @@ final class VivideAFManager {
         if let attributionJson = attributionJson?.trimmedNonEmpty {
             defaults.set(attributionJson, forKey: nativeAFAttributionJSONKey)
         }
-        defaults.set(true, forKey: nativeAFHasObtainedAttributionKey)
+
+        let hasUsableData = result.hasRealAttributionPayload
+            || afId?.trimmedNonEmpty != nil
+            || source?.trimmedNonEmpty != nil
+        if hasUsableData {
+            defaults.set(true, forKey: nativeAFHasObtainedAttributionKey)
+        }
+
+        let wasWaiting = attributionContinuation != nil
         if let continuation = attributionContinuation {
             attributionContinuation = nil
             continuation.resume(returning: result)
+        }
+
+        // 仅「等待已超时后」迟到的真实归因才通知补传，避免与首启请求重复
+        if hasUsableData, !previousHadRealPayload, !wasWaiting {
+            NotificationCenter.default.post(name: .vivideAFAttributionDidUpdate, object: nil)
         }
     }
 
@@ -192,8 +281,10 @@ final class VivideAFManager {
     }
 
     private func waitForAttributionOrTimeout() async -> AFAttributionResult? {
-        if defaults.bool(forKey: nativeAFHasObtainedAttributionKey) {
-            return getAttributionForLoginCached()
+        if defaults.bool(forKey: nativeAFHasObtainedAttributionKey),
+           let cached = getAttributionForLoginCached(),
+           cached.hasRealAttributionPayload || cached.afId?.trimmedNonEmpty != nil {
+            return cached
         }
 
         return await withCheckedContinuation { continuation in
@@ -208,8 +299,8 @@ final class VivideAFManager {
     private func timeoutAttribution() {
         guard let continuation = attributionContinuation else { return }
         attributionContinuation = nil
-        defaults.set(true, forKey: nativeAFHasObtainedAttributionKey)
-        continuation.resume(returning: getAttributionForLoginCached())
+        // 超时不把「已获取归因」置真，避免迟到的 conversion 回调被忽略等待逻辑；迟到数据仍可通过 setAttribution 补存
+        continuation.resume(returning: getAttributionForLoginCached() ?? AFAttributionResult.timeoutFallback())
     }
 
     private func getAttributionForLoginCached() -> AFAttributionResult? {
@@ -315,13 +406,21 @@ private final class VivideAFDelegateWrapper: NSObject, AppsFlyerLibDelegate {
 
     func onConversionDataSuccess(_ conversionInfo: [AnyHashable: Any]) {
         let afId = AppsFlyerLib.shared().getAppsFlyerUID()
-        let attributionJson = (try? JSONSerialization.data(withJSONObject: conversionInfo))
-            .flatMap { String(data: $0, encoding: .utf8) }
-        let source = conversionInfo["media_source"] as? String
+        let attributionJson = AFAttributionResult.jsonString(fromConversionInfo: conversionInfo)
+        let source = (conversionInfo["media_source"] as? String)
+            ?? (conversionInfo["mediaSource"] as? String)
+        let adId = (conversionInfo["advertising_id"] as? String)
+            ?? (conversionInfo["idfa"] as? String)
+
+        if BSideConfig.debugLogging {
+            let preview = attributionJson.map { String($0.prefix(240)) } ?? "nil"
+            print("✅ [AF] conversion success afId=\(afId ?? "nil") source=\(source ?? "nil") json=\(preview)")
+        }
+
         Task { @MainActor in
             VivideAFManager.shared.setAttribution(
                 afId: afId,
-                adId: nil,
+                adId: adId,
                 source: source,
                 attributionJson: attributionJson
             )
@@ -329,12 +428,23 @@ private final class VivideAFDelegateWrapper: NSObject, AppsFlyerLibDelegate {
     }
 
     func onConversionDataFail(_ error: Error) {
+        let afId = AppsFlyerLib.shared().getAppsFlyerUID()
+        let failureJson = AFAttributionResult.jsonString(from: [
+            "af_status": "failure",
+            "error": error.localizedDescription
+        ])
+
+        if BSideConfig.debugLogging {
+            print("⚠️ [AF] conversion failed: \(error.localizedDescription)")
+        }
+
         Task { @MainActor in
+            // 失败时仍带上 afId，避免服务端完全无设备侧标识；不假装已有完整归因
             VivideAFManager.shared.setAttribution(
-                afId: nil,
+                afId: afId,
                 adId: nil,
                 source: nil,
-                attributionJson: nil
+                attributionJson: failureJson
             )
         }
     }
