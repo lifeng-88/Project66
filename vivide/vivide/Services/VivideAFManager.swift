@@ -33,7 +33,10 @@ struct AFAttributionResult {
 
     var hasRealAttributionPayload: Bool {
         guard let json = attributionJson?.trimmedNonEmpty else { return false }
-        if json.contains("\"timeout\":true") || json.contains("\"timeout\": true") { return false }
+        // timeout / failure 占位不算「conversion 成功」
+        if json.contains("\"timeout\"") { return false }
+        if json.contains("\"af_status\":\"failure\"") { return false }
+        if json.contains("\"af_status\": \"failure\"") { return false }
         return true
     }
 
@@ -141,18 +144,23 @@ final class VivideAFManager {
         startedConfigurationKey != nil
     }
 
+    /// 对齐流程图：配置齐全并 start 后，仅在拿到 conversion 成功归因时返回结果；超时 / 未配置返回 nil。
     func prepareForFirstLaunch(channelId: String?) async -> (canLogin: Bool, attribution: AFAttributionResult?) {
         let effectiveChannel = effectiveChannel(channelId: channelId)
         #if DEBUG
         if ProcessInfo.processInfo.environment["SIMULATE_AF_TIMEOUT"] == "1" {
-            return (true, AFAttributionResult.timeoutFallback())
+            return (true, nil)
         }
         #endif
         guard await configureAndStart(channelId: effectiveChannel) else {
-            return (true, AFAttributionResult.timeoutFallback())
+            // 配置不齐 → AF 不启动 → 不进入 app_config
+            return (true, nil)
         }
         let attribution = await waitForAttributionOrTimeout()
-        return (true, attribution ?? AFAttributionResult.timeoutFallback())
+        if let attribution, attribution.hasRealAttributionPayload {
+            return (true, attribution)
+        }
+        return (true, nil)
     }
 
     func prepareLoginAttribution(channelId: String?) async -> [String: Any] {
@@ -233,8 +241,6 @@ final class VivideAFManager {
         }
 
         let hasUsableData = result.hasRealAttributionPayload
-            || afId?.trimmedNonEmpty != nil
-            || source?.trimmedNonEmpty != nil
         if hasUsableData {
             defaults.set(true, forKey: nativeAFHasObtainedAttributionKey)
         }
@@ -242,10 +248,11 @@ final class VivideAFManager {
         let wasWaiting = attributionContinuation != nil
         if let continuation = attributionContinuation {
             attributionContinuation = nil
-            continuation.resume(returning: result)
+            // 等待中：仅真实 conversion 成功才唤醒并继续 app_config；failure 则当未拿到
+            continuation.resume(returning: hasUsableData ? result : nil)
         }
 
-        // 仅「等待已超时后」迟到的真实归因才通知补传，避免与首启请求重复
+        // 超时后迟到的真实归因 → 再触发 app_config
         if hasUsableData, !previousHadRealPayload, !wasWaiting {
             NotificationCenter.default.post(name: .vivideAFAttributionDidUpdate, object: nil)
         }
@@ -283,7 +290,7 @@ final class VivideAFManager {
     private func waitForAttributionOrTimeout() async -> AFAttributionResult? {
         if defaults.bool(forKey: nativeAFHasObtainedAttributionKey),
            let cached = getAttributionForLoginCached(),
-           cached.hasRealAttributionPayload || cached.afId?.trimmedNonEmpty != nil {
+           cached.hasRealAttributionPayload {
             return cached
         }
 
@@ -299,8 +306,12 @@ final class VivideAFManager {
     private func timeoutAttribution() {
         guard let continuation = attributionContinuation else { return }
         attributionContinuation = nil
-        // 超时不把「已获取归因」置真，避免迟到的 conversion 回调被忽略等待逻辑；迟到数据仍可通过 setAttribution 补存
-        continuation.resume(returning: getAttributionForLoginCached() ?? AFAttributionResult.timeoutFallback())
+        // 超时不打 app_config；仅当已有真实 conversion 缓存时返回
+        if let cached = getAttributionForLoginCached(), cached.hasRealAttributionPayload {
+            continuation.resume(returning: cached)
+        } else {
+            continuation.resume(returning: nil)
+        }
     }
 
     private func getAttributionForLoginCached() -> AFAttributionResult? {

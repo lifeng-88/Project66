@@ -119,6 +119,11 @@ final class BSideManager: ObservableObject {
     private func performFirstLaunchBootstrap() async {
         phase = .loading
         let attribution = await prepareAffiliationOnly()
+        // 对齐流程图：仅 onConversionDataSuccess 归因缓存后才请求 app_config
+        guard let attribution, attribution.hasRealAttributionPayload else {
+            applyFirstLaunchFailure(reason: "waiting_af_conversion_or_unavailable")
+            return
+        }
         let channel = await VivideAppConfig.shared.getChannel()
         await applyAppConfigResponse(await requestAppConfig(channel: channel, attribution: attribution))
     }
@@ -134,7 +139,14 @@ final class BSideManager: ObservableObject {
     private func fetchAppConfigFromNetwork() async {
         let channel = await VivideAppConfig.shared.getChannel()
         let rawAttribution = await VivideAFManager.shared.getAttributionForLogin()
-        let result = await requestAppConfig(channel: channel, attribution: rawAttribution)
+        // 刷新同样要求真实 conversion，避免 timeout 占位回传
+        guard let attribution = rawAttribution, attribution.hasRealAttributionPayload else {
+            if BSideConfig.debugLogging {
+                print("⏭ [BSideManager] skip app_config refresh: no conversion attribution yet")
+            }
+            return
+        }
+        let result = await requestAppConfig(channel: channel, attribution: attribution)
         if case .success = result {
             UserDefaults.standard.set(
                 Date().timeIntervalSince1970,
@@ -146,9 +158,8 @@ final class BSideManager: ObservableObject {
 
     private func requestAppConfig(
         channel: String,
-        attribution raw: AFAttributionResult?
+        attribution: AFAttributionResult
     ) async -> Result<VivideAppConfigResponse, VivideAppConfigError> {
-        let attribution = raw ?? AFAttributionResult.timeoutFallback()
         let deviceId = await VivideDeviceManager.shared.getDeviceId()
         let version = await VivideDeviceManager.shared.getAppVersion()
         let request = VivideAppConfigRequest(
